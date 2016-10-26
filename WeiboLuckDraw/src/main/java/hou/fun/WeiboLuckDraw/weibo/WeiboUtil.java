@@ -140,10 +140,8 @@ public class WeiboUtil {
 				"Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_0) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/54.0.2840.71 Safari/537.36");
 		conn.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
 		DataOutputStream out = new DataOutputStream(conn.getOutputStream());
-		out.writeBytes("appkey=&mid=" + mid + "&style_type=1&reason=" + URLEncoder.encode(message) + "&location=&_t=0");
-		// out.writeBytes("location=v6_content_home&appkey=&style_type=1&pic_id=&text="
-		// + URLEncoder.encode(message)
-		// + "&pdetail=&rank=0&rankid=&module=stissue&pub_type=dialog&_t=0");
+		out.writeBytes("appkey=&mid=" + mid + "&style_type=1&reason=" + URLEncoder.encode(message)
+				+ "&is_comment_base=1&location=&_t=0");// 同时评论
 		out.flush();
 		out.close();
 		BufferedReader read = new BufferedReader(new InputStreamReader(conn.getInputStream(), "gbk"));

@@ -2,6 +2,7 @@ package hou.fun.WeiboLuckDraw;
 
 import java.io.IOException;
 import java.net.MalformedURLException;
+import java.net.URLDecoder;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
@@ -28,10 +29,12 @@ public class AutomaticReWeibo {
 	}
 
 	private void init() throws InterruptedException, MalformedURLException, IOException {
-		cookies = FileUtil.getCooikes();
-
 		sender = new WeiboUtil();
 		spider = new WeiboSpider();
+
+		sender.refreshCookies();
+
+		cookies = FileUtil.getCooikes();
 
 		ScheduledExecutorService service = Executors.newScheduledThreadPool(10);
 
@@ -47,6 +50,7 @@ public class AutomaticReWeibo {
 
 	class Single implements Runnable {
 
+		@SuppressWarnings("deprecation")
 		@Override
 		public void run() {
 			List<String> mids = spider.getMids();
@@ -55,7 +59,8 @@ public class AutomaticReWeibo {
 					SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 					String time = sdf.format(new Date());
 					System.out.println(mid + ": " + time);
-					sender.reWeiboByMid(mid, time, cookies);
+					String ret = sender.reWeiboByMid(mid, time, cookies);
+					System.out.println(URLDecoder.decode(ret));
 					Thread.sleep(50 * 1000);
 				} catch (Exception e) {
 					e.printStackTrace();
