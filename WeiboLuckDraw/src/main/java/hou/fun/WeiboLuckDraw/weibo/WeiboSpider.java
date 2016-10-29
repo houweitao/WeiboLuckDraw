@@ -23,6 +23,9 @@ public class WeiboSpider {
 	// String url =
 	// "http://s.weibo.com/weibo/%25E6%258A%25BD%25E5%25A5%2596&page=";
 	String url = "http://s.weibo.com/weibo/%2540%25E8%25BD%25AC%25E5%258F%2591%25E6%258A%25BD%25E5%25A5%2596%25E5%25B9%25B3%25E5%258F%25B0&b=1&page=";
+	String urlFirst = "http://s.weibo.com/weibo/";
+	String urlSecond = "&b=1&page=";
+
 	private static Map<String, String> cookies;
 	private WeiboUtil weiboUtil = new WeiboUtil();
 
@@ -36,6 +39,18 @@ public class WeiboSpider {
 
 		for (int i = 1; i < 3; i++) {
 			String curUrl = url + i;
+			ret.addAll(crawler(curUrl));
+		}
+		return ret;
+	}
+
+	public List<String> getMids(String key) {
+		List<String> ret = new ArrayList<>();
+		cookies = FileUtil.getCookiesMap();
+
+		String newUrl = urlFirst + key + urlSecond;
+		for (int i = 1; i < 3; i++) {
+			String curUrl = newUrl + i;
 			ret.addAll(crawler(curUrl));
 		}
 		return ret;

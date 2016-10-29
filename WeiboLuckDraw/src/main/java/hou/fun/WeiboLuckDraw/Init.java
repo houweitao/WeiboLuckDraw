@@ -18,17 +18,8 @@ public class Init {
 			f.mkdirs();
 		}
 
-		String fileName = "cookies.properties";
-		File file = new File(f, fileName);
-		if (!file.exists()) {
-			file.createNewFile();
-		}
-		fileName = "userinfo.properties";
-		file = new File(f, fileName);
-		if (!file.exists()) {
-			file.createNewFile();
-		}
-
+		FileUtil.initCookies();
 		FileUtil.initUserinfo();
+		FileUtil.initMid();
 	}
 }

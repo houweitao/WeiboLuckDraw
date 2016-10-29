@@ -6,9 +6,13 @@ import java.net.URLDecoder;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
+import java.util.Scanner;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import hou.fun.WeiboLuckDraw.util.FileUtil;
 import hou.fun.WeiboLuckDraw.weibo.WeiboSpider;
@@ -20,6 +24,7 @@ import hou.fun.WeiboLuckDraw.weibo.WeiboUtil;
  */
 
 public class AutomaticReWeibo {
+	private static final Logger log = LoggerFactory.getLogger(AutomaticReWeibo.class);
 	private static String cookies;
 	private WeiboUtil sender;
 	private WeiboSpider spider;
@@ -49,19 +54,41 @@ public class AutomaticReWeibo {
 	}
 
 	class Single implements Runnable {
+		private String key;
+		private String message;
+
+		public Single() {
+			Scanner scanner = new Scanner(System.in);
+			System.out.println("Please input the key word you want to search..");
+			key = scanner.nextLine();
+
+			System.out.println("Please input the message you want to say in weibo..");
+			message = scanner.nextLine();
+		}
 
 		@SuppressWarnings("deprecation")
 		@Override
 		public void run() {
-			List<String> mids = spider.getMids();
+			List<String> mids = spider.getMids(key);
+			String latestMid = mids.get(0);
+
 			for (String mid : mids) {
 				try {
 					SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 					String time = sdf.format(new Date());
-					System.out.println(mid + ": " + time);
-					String ret = sender.reWeiboByMid(mid, time, cookies);
-					System.out.println(URLDecoder.decode(ret));
-					Thread.sleep(5 * 60 * 1000);
+					log.info("mid: " + mid);
+
+					if (latestMid.compareTo(mid) > 0) {
+						latestMid = mid;
+					}
+
+					if (FileUtil.canReWeibo(mid)) {
+						String ret = sender.reWeiboByMid(mid, message, cookies);
+						log.info(URLDecoder.decode(ret));
+						Thread.sleep(5 * 60 * 1000);
+					} else {
+						log.info("之前已经转发过");
+					}
 				} catch (Exception e) {
 					e.printStackTrace();
 					try {
@@ -82,7 +109,7 @@ public class AutomaticReWeibo {
 					}
 				}
 			}
-
+			FileUtil.updateMid(latestMid);
 		}
 	}
 }
