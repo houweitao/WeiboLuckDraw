@@ -61,7 +61,7 @@ public class AutomaticReWeibo {
 					System.out.println(mid + ": " + time);
 					String ret = sender.reWeiboByMid(mid, time, cookies);
 					System.out.println(URLDecoder.decode(ret));
-					Thread.sleep(50 * 1000);
+					Thread.sleep(5 * 60 * 1000);
 				} catch (Exception e) {
 					e.printStackTrace();
 					try {
