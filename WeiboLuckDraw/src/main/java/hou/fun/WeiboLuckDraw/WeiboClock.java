@@ -70,7 +70,7 @@ public class WeiboClock {
 			while (true) {
 				if (new Date().after(speakTime)) {
 					@SuppressWarnings("deprecation")
-					String words = speakHours(speakTime.getHours()) + "," + TimeUtil.getYear(speakTime) + "已经过去了 "
+					String words = speakHours(speakTime.getHours()) + "，" + TimeUtil.getYear(speakTime) + "年已经过去了 "
 							+ TimeUtil.used(speakTime);
 					try {
 						String ret = WeiboUtil.sendWeiBoMessage(words, cookies);

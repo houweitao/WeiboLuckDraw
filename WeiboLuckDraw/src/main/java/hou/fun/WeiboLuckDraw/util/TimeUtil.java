@@ -72,7 +72,7 @@ public class TimeUtil {
 		int sec = Integer.valueOf(secondFormat.format(date));
 
 		long begin = now - min * 60 * 1000 - sec * 1000;
-		long end = begin + 60 * 60 * 1000;
+		long end = begin + 59 * 60 * 1000;
 		return new Date(end);
 	}
 
